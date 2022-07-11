@@ -1,3 +1,9 @@
+import json
+import sqlite3
+
+from models.dog import Dog
+
+
 DOGS = [
     {
         'id': 1,
@@ -26,7 +32,29 @@ def get_all_dogs():
     Returns:
         string: JSON serialized string of the contents of the dog table
     """
-    # TODO: Write the code to get all dogs from the database
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            d.id,
+            d.name,
+            d.walker_id
+        FROM dog d
+        """)
+
+        dogs = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            dog = Dog(row['id'], row['name'], row['walker_id'])
+
+            dogs.append(dog.__dict__)
+
+    return json.dumps(dogs)
 
 
 def get_single_dog(id):
@@ -37,8 +65,25 @@ def get_single_dog(id):
 
     Returns:
         string: JSON serialized string of the dog from the database
-    """  
-    # TODO: Write the code to get the single dog from the database
+    """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            d.id,
+            d.name,
+            d.walker_id
+        FROM dog d
+        WHERE w.id = ?
+        """, (id, ))
+
+        data = db_cursor.fetchone()
+
+        dog = Dog(data['id'], data['name'], data['walker_id'])
+
+        return json.dumps(dog.__dict__)
 
 
 def create_dog(new_dog):
@@ -88,6 +133,7 @@ def update_animal(id, updated_dog):
         if dog["id"] == id:
             DOGS[index] = updated_dog
             break
+
 
 def update_dog(id, updated_dog):
     """Updates a single dog in the database

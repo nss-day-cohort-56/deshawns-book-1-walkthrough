@@ -40,7 +40,8 @@ def get_all_walkers():
         SELECT
             w.id,
             w.name,
-            w.email
+            w.email,
+            w.city_id
         FROM walker w
         """)
 
@@ -50,7 +51,7 @@ def get_all_walkers():
 
         for row in dataset:
 
-            walker = Walker(row['id'], row['name'], row['email'])
+            walker = Walker(row['id'], row['name'], row['email'], data['city_id'])
 
             walkers.append(walker.__dict__)
 
@@ -73,14 +74,15 @@ def get_single_walker(id):
         SELECT
             w.id,
             w.name,
-            w.email
+            w.email,
+            w.city_id
         FROM walker w
         WHERE w.id = ?
         """, ( id, ))
 
         data = db_cursor.fetchone()
 
-        walker = Walker(data['id'], data['name'], data['email'])
+        walker = Walker(data['id'], data['name'], data['email'], data['city_id'])
 
         return json.dumps(walker.__dict__)
 
