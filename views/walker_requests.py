@@ -67,7 +67,7 @@ def get_walkers_by_city(city_id):
 
     Returns:
         string: JSON serialized string of the data
-    """    
+    """
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
@@ -169,7 +169,20 @@ def update_walker(id, updated_walker):
         id (int): The id of the walker
         updated_walker (dict): The updated walker dictionary
     """
-    for index, walker in enumerate(WALKERS):
-        if walker["id"] == id:
-            WALKERS[index] = updated_walker
-            break
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Animal
+        SET
+            name = ?,
+            email = ?
+        WHERE id = ?
+        """, (updated_walker['name'], updated_walker['email'], id))
+
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        return False
+    else:
+        return True

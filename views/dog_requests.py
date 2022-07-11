@@ -162,7 +162,4 @@ def update_dog(id, updated_dog):
         id (int): The id of the dog
         updated_dog (dict): The updated dog dictionary
     """
-    for index, dog in enumerate(DOGS):
-        if dog["id"] == id:
-            DOGS[index] = updated_dog
-            break
+    # TODO: Add the code to update a dog in the database
