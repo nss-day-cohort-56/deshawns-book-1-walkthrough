@@ -4,3 +4,4 @@ class Walker:
         self.name = name
         self.email = email
         self.city_id = city_id
+        self.city = {}

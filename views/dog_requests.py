@@ -104,6 +104,7 @@ def get_single_dog(id):
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
 
+        # TODO: Get the associated walker data using a sql join
         db_cursor.execute("""
         SELECT
             d.id,

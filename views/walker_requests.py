@@ -114,15 +114,21 @@ def get_single_walker(id):
             w.id,
             w.name,
             w.email,
-            w.city_id
+            w.city_id,
+            c.name city_name
         FROM walker w
+        JOIN city c on c.id = w.city_id
         WHERE w.id = ?
         """, (id, ))
 
         data = db_cursor.fetchone()
-
         walker = Walker(data['id'], data['name'],
                         data['email'], data['city_id'])
+
+        walker.city = {
+            'id': data['city_id'],
+            'name': data['city_name']
+        }
 
         return json.dumps(walker.__dict__)
 
