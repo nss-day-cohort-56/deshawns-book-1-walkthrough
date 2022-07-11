@@ -6,7 +6,10 @@ from views import (get_all_walkers,
                    get_single_dog,
                    delete_walker,
                    create_walker,
-                )
+                   update_walker,
+                   create_dog,
+                   delete_dog,
+                   )
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -94,8 +97,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "walkers":
             new_data = create_walker(post_body)
         if resource == "dogs":
-            # TODO: Finish the code to add a dog
-            pass
+            new_data = create_dog(post_body)
 
         self.wfile.write(f"{new_data}".encode())
 
@@ -109,7 +111,22 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == 'walkers':
             delete_walker(id)
         if resource == 'dogs':
-            # TODO: Finish the code to delete a dog
+            delete_dog(id)
+
+        self.wfile.write("".encode())
+
+    def do_PUT(self):
+        self._set_headers(204)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == "walkers":
+            update_walker(id, post_body)
+        if resource == "dogs":
+            # TODO: add the code to update a dog
             pass
 
         self.wfile.write("".encode())

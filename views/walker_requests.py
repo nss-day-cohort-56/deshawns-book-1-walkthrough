@@ -65,3 +65,15 @@ def delete_walker(id):
 
     if walker_index >= 0:
         WALKERS.pop(walker_index)
+
+def update_walker(id, updated_walker):
+    """Updates a single walker in the database
+
+    Args:
+        id (int): The id of the walker
+        updated_walker (dict): The updated walker dictionary
+    """
+    for index, walker in enumerate(WALKERS):
+        if walker["id"] == id:
+            WALKERS[index] = updated_walker
+            break
