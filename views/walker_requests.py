@@ -142,15 +142,23 @@ def create_walker(new_walker):
     Returns:
         dict: The walker that was added with it's new id
     """
-    max_id = WALKERS[-1]["id"]
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    new_id = max_id + 1
+        db_cursor.execute("""
+        INSERT INTO Animal
+            (name, email, city_id)
+        VALUES
+            (?, ?, ?);
+        """, (new_walker['name'],
+              new_walker['email'],
+              new_walker['city_id']))
 
-    new_walker["id"] = new_id
+        id = db_cursor.lastrowid
 
-    WALKERS.append(new_walker)
+        new_walker['id'] = id
 
-    return new_walker
+    return json.dumps(new_walker)
 
 
 def delete_walker(id):

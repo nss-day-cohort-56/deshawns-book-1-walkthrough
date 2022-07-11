@@ -130,15 +130,7 @@ def create_dog(new_dog):
     Returns:
         dict: The dog that was added with it's new id
     """
-    max_id = DOGS[-1]["id"]
-
-    new_id = max_id + 1
-
-    new_dog["id"] = new_id
-
-    DOGS.append(new_dog)
-
-    return new_dog
+    # TODO: Add the code to insert a dog in the database
 
 
 def delete_dog(id):
