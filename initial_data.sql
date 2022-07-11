@@ -1,7 +1,14 @@
+CREATE TABLE `city` (
+    `id`    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `name`    TEXT NOT NULL
+)
+
 CREATE TABLE `walker` (
     `id`    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     `name`    TEXT NOT NULL,
-    `email`    TEXT NOT NULL
+    `email`    TEXT NOT NULL,
+    `city_id` INTEGER,
+	FOREIGN KEY(`city_id`) REFERENCES `city`(`id`),
 );
 
 INSERT INTO `walker` VALUES (null, "Larry Fine", "larry@aol.com");
