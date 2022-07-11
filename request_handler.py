@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from views.walker_requests import get_all_walkers, get_single_walker
+from views import (get_all_walkers, get_single_walker, get_all_dogs, get_single_dog)
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -60,8 +60,11 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 response = f"{get_all_walkers()}"
         elif resource == "dogs":
-            # TODO: Add the code to get all the dogs and a single dog
-            pass
+            if id is not None:
+                response = f"{get_single_dog(id)}"
+
+            else:
+                response = f"{get_all_dogs()}"
 
         else:
             response = []
