@@ -91,8 +91,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == 'walkers' and query.get('city'):
                 response = get_walkers_by_city(query['city'])
             if resource == 'dogs' and query.get('walker'):
-                # TODO: add code to get the dogs filtered by their walker
-                pass
+                response = get_dogs_by_walker(query['walker'])
 
         self.wfile.write(f"{response}".encode())
 

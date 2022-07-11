@@ -56,6 +56,40 @@ def get_all_dogs():
 
     return json.dumps(dogs)
 
+def get_dogs_by_walker(walker_id):
+    """Filter the dogs in the database by walker
+
+    Args:
+        walker_id (int): The walker id from the query params of the request
+
+    Returns:
+        string: JSON serialized string of the contents of the dog table
+    """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            d.id,
+            d.name,
+            d.walker_id
+        FROM dog d
+        where d.walker_id = ?
+        """, (walker_id))
+
+        dogs = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            dog = Dog(row['id'], row['name'], row['walker_id'])
+
+            dogs.append(dog.__dict__)
+
+    return json.dumps(dogs)
+
 
 def get_single_dog(id):
     """The requested dog from the database
@@ -112,7 +146,13 @@ def delete_dog(id):
     Args:
         id (int): The id of the dog to be deleted
     """
-    # TODO: add the code to delete the dog from the database
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM dog
+        WHERE id = ?
+        """, (id, ))
 
 
 def update_dog(id, updated_dog):
