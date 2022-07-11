@@ -1,6 +1,8 @@
+import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
-from views import (get_all_walkers, get_single_walker, get_all_dogs, get_single_dog)
+from views import (get_all_walkers, get_single_walker,
+                   get_all_dogs, get_single_dog)
+from views.walker_requests import create_walker
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -78,8 +80,20 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-        response = f"received post request:<br>{post_body}"
-        self.wfile.write(response.encode())
+
+        post_body = json.loads(post_body)
+
+        (resource, _) = self.parse_url(self.path)
+
+        new_data = None
+
+        if resource == "walkers":
+            new_data = create_walker(post_body)
+        if resource == "dogs":
+            # TODO: Finish the code to add a dog
+            pass
+
+        self.wfile.write(f"{new_data}".encode())
 
 
 def main():

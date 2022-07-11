@@ -31,3 +31,14 @@ def get_single_walker(id):
             requested_walker = walker
 
     return requested_walker
+
+def create_walker(new_walker):
+    max_id = WALKERS[-1]["id"]
+
+    new_id = max_id + 1
+
+    new_walker["id"] = new_id
+
+    WALKERS.append(new_walker)
+
+    return new_walker
