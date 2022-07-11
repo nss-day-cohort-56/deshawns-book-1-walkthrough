@@ -9,6 +9,7 @@ from views import (get_all_walkers,
                    update_walker,
                    create_dog,
                    delete_dog,
+                   update_dog
                    )
 
 
@@ -126,8 +127,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "walkers":
             update_walker(id, post_body)
         if resource == "dogs":
-            # TODO: add the code to update a dog
-            pass
+            update_dog(id, post_body)
 
         self.wfile.write("".encode())
 

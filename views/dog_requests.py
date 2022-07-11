@@ -81,3 +81,15 @@ def update_animal(id, updated_dog):
         if dog["id"] == id:
             DOGS[index] = updated_dog
             break
+
+def update_dog(id, updated_dog):
+    """Updates a single dog in the database
+
+    Args:
+        id (int): The id of the dog
+        updated_dog (dict): The updated dog dictionary
+    """
+    for index, dog in enumerate(DOGS):
+        if dog["id"] == id:
+            DOGS[index] = updated_dog
+            break
