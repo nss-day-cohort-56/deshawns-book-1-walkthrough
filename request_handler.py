@@ -1,8 +1,12 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import (get_all_walkers, get_single_walker,
-                   get_all_dogs, get_single_dog)
-from views.walker_requests import create_walker
+from views import (get_all_walkers,
+                   get_single_walker,
+                   get_all_dogs,
+                   get_single_dog,
+                   delete_walker,
+                   create_walker,
+                )
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -94,6 +98,21 @@ class HandleRequests(BaseHTTPRequestHandler):
             pass
 
         self.wfile.write(f"{new_data}".encode())
+
+    def do_DELETE(self):
+        """Handles delete requests to the server
+        """
+        self._set_headers(204)
+
+        (resource, id) = self.parse_url(self.path)
+
+        if resource == 'walkers':
+            delete_walker(id)
+        if resource == 'dogs':
+            # TODO: Finish the code to delete a dog
+            pass
+
+        self.wfile.write("".encode())
 
 
 def main():

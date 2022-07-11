@@ -33,6 +33,14 @@ def get_single_walker(id):
     return requested_walker
 
 def create_walker(new_walker):
+    """Add a walker to the list
+
+    Args:
+        new_walker (dict): The new walker to be added
+
+    Returns:
+        dict: The walker that was added with it's new id
+    """
     max_id = WALKERS[-1]["id"]
 
     new_id = max_id + 1
@@ -42,3 +50,18 @@ def create_walker(new_walker):
     WALKERS.append(new_walker)
 
     return new_walker
+
+def delete_walker(id):
+    """Remove the selected walker from the list
+
+    Args:
+        id (int): The id of the walker to be deleted
+    """
+    walker_index = -1
+
+    for index, walker in enumerate(WALKERS):
+        if walker["id"] == id:
+            walker_index = index
+
+    if walker_index >= 0:
+        WALKERS.pop(walker_index)
