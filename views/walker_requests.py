@@ -1,3 +1,9 @@
+import json
+import sqlite3
+
+from models import Walker
+
+
 WALKERS = [
     {
         'id': 1,
@@ -21,16 +27,62 @@ WALKERS = [
 
 
 def get_all_walkers():
-    return WALKERS
+    """Gets all walkers from the database
+
+    Returns:
+        string: JSON serialized string of the contents of the walker table
+    """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            w.id,
+            w.name,
+            w.email
+        FROM walker w
+        """)
+
+        walkers = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            walker = Walker(row['id'], row['name'], row['email'])
+
+            walkers.append(walker.__dict__)
+
+    return json.dumps(walkers)
 
 def get_single_walker(id):
-    requested_walker = None
+    """The requested walker from the database
 
-    for walker in WALKERS:
-        if walker["id"] == id:
-            requested_walker = walker
+    Args:
+        id (int): The id of the requested walker
 
-    return requested_walker
+    Returns:
+        string: JSON serialized string of the walker from the database
+    """    
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            w.id,
+            w.name,
+            w.email
+        FROM walker w
+        WHERE w.id = ?
+        """, ( id, ))
+
+        data = db_cursor.fetchone()
+
+        walker = Walker(data['id'], data['name'], data['email'])
+
+        return json.dumps(walker.__dict__)
 
 def create_walker(new_walker):
     """Add a walker to the list

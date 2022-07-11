@@ -21,17 +21,24 @@ DOGS = [
 
 
 def get_all_dogs():
-    return DOGS
+    """Gets all dogs from the database
+
+    Returns:
+        string: JSON serialized string of the contents of the dog table
+    """
+    # TODO: Write the code to get all dogs from the database
 
 
 def get_single_dog(id):
-    requested_dog = None
+    """The requested dog from the database
 
-    for dog in DOGS:
-        if dog["id"] == id:
-            requested_dog = dog
+    Args:
+        id (int): The id of the requested dog
 
-    return requested_dog
+    Returns:
+        string: JSON serialized string of the dog from the database
+    """  
+    # TODO: Write the code to get the single dog from the database
 
 
 def create_dog(new_dog):
