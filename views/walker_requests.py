@@ -148,19 +148,18 @@ def create_walker(new_walker):
 
 
 def delete_walker(id):
-    """Remove the selected walker from the list
+    """Remove the selected walker from the database
 
     Args:
         id (int): The id of the walker to be deleted
     """
-    walker_index = -1
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    for index, walker in enumerate(WALKERS):
-        if walker["id"] == id:
-            walker_index = index
-
-    if walker_index >= 0:
-        WALKERS.pop(walker_index)
+        db_cursor.execute("""
+        DELETE FROM walker
+        WHERE id = ?
+        """, (id, ))
 
 
 def update_walker(id, updated_walker):

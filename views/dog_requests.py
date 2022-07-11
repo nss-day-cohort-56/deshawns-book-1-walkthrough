@@ -107,32 +107,12 @@ def create_dog(new_dog):
 
 
 def delete_dog(id):
-    """Remove the selected dog from the list
+    """Remove the selected dog from the database
 
     Args:
         id (int): The id of the dog to be deleted
     """
-    dog_index = -1
-
-    for index, dog in enumerate(DOGS):
-        if dog["id"] == id:
-            dog_index = index
-
-    if dog_index >= 0:
-        DOGS.pop(dog_index)
-
-
-def update_animal(id, updated_dog):
-    """Updates a single dog in the database
-
-    Args:
-        id (int): The id of the dog
-        updated_dog (dict): The updated dog dictionary
-    """
-    for index, dog in enumerate(DOGS):
-        if dog["id"] == id:
-            DOGS[index] = updated_dog
-            break
+    # TODO: add the code to delete the dog from the database
 
 
 def update_dog(id, updated_dog):
