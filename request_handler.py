@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 from views import (get_all_walkers,
                    get_single_walker,
                    get_all_dogs,
@@ -9,7 +10,8 @@ from views import (get_all_walkers,
                    update_walker,
                    create_dog,
                    delete_dog,
-                   update_dog
+                   update_dog,
+                   get_walkers_by_city,
                    )
 
 
@@ -19,19 +21,21 @@ class HandleRequests(BaseHTTPRequestHandler):
     """
 
     def parse_url(self, path):
-
-        path_params = path.split("/")
+        """Parse the url into the resource, id, or query params"""
+        parsed_url = urlparse(self.path)
+        path_params = parsed_url.path.split('/')
         resource = path_params[1]
-        id = None
 
+        if parsed_url.query:
+            query = parse_qs(parsed_url.query)
+            return (resource, query)
+
+        pk = None
         try:
-            id = int(path_params[2])
-        except IndexError:
+            pk = int(path_params[2])
+        except (IndexError, ValueError):
             pass
-        except ValueError:
-            pass
-
-        return (resource, id)
+        return (resource, pk)
 
     def _set_headers(self, status):
         """Sets the status code, Content-Type and Access-Control-Allow-Origin
@@ -61,23 +65,34 @@ class HandleRequests(BaseHTTPRequestHandler):
         """
         self._set_headers(200)
 
-        (resource, id) = self.parse_url(self.path)
+        parsed = self.parse_url(self.path)
 
-        if resource == "walkers":
-            if id is not None:
-                response = f"{get_single_walker(id)}"
+        # If the path does not include a query parameter, continue with the original if block
+        if '?' not in self.path:
+            (resource, id) = parsed
+
+            if resource == "walkers":
+                if id is not None:
+                    response = f"{get_single_walker(id)}"
+
+                else:
+                    response = f"{get_all_walkers()}"
+            elif resource == "dogs":
+                if id is not None:
+                    response = f"{get_single_dog(id)}"
+
+                else:
+                    response = f"{get_all_dogs()}"
 
             else:
-                response = f"{get_all_walkers()}"
-        elif resource == "dogs":
-            if id is not None:
-                response = f"{get_single_dog(id)}"
-
-            else:
-                response = f"{get_all_dogs()}"
-
+                response = []
         else:
-            response = []
+            (resource, query) = parsed
+            if resource == 'walkers' and query.get('city'):
+                response = get_walkers_by_city(query['city'])
+            if resource == 'dogs' and query.get('walker'):
+                # TODO: add code to get the dogs filtered by their walker
+                pass
 
         self.wfile.write(f"{response}".encode())
 

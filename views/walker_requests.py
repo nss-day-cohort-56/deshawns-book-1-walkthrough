@@ -51,20 +51,22 @@ def get_all_walkers():
 
         for row in dataset:
 
-            walker = Walker(row['id'], row['name'], row['email'], data['city_id'])
+            walker = Walker(row['id'], row['name'],
+                            row['email'], row['city_id'])
 
             walkers.append(walker.__dict__)
 
     return json.dumps(walkers)
 
-def get_single_walker(id):
-    """The requested walker from the database
+
+def get_walkers_by_city(city_id):
+    """Gets the walkers filtered by the city id
 
     Args:
-        id (int): The id of the requested walker
+        city_id (int): The city id from the query params of the request
 
     Returns:
-        string: JSON serialized string of the walker from the database
+        string: JSON serialized string of the data
     """    
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
@@ -77,14 +79,53 @@ def get_single_walker(id):
             w.email,
             w.city_id
         FROM walker w
+        where city_id = ?
+        """, (city_id))
+
+        walkers = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            walker = Walker(row['id'], row['name'],
+                            row['email'], row['city_id'])
+
+            walkers.append(walker.__dict__)
+
+    return json.dumps(walkers)
+
+
+def get_single_walker(id):
+    """The requested walker from the database
+
+    Args:
+        id (int): The id of the requested walker
+
+    Returns:
+        string: JSON serialized string of the walker from the database
+    """
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            w.id,
+            w.name,
+            w.email,
+            w.city_id
+        FROM walker w
         WHERE w.id = ?
-        """, ( id, ))
+        """, (id, ))
 
         data = db_cursor.fetchone()
 
-        walker = Walker(data['id'], data['name'], data['email'], data['city_id'])
+        walker = Walker(data['id'], data['name'],
+                        data['email'], data['city_id'])
 
         return json.dumps(walker.__dict__)
+
 
 def create_walker(new_walker):
     """Add a walker to the list
@@ -105,6 +146,7 @@ def create_walker(new_walker):
 
     return new_walker
 
+
 def delete_walker(id):
     """Remove the selected walker from the list
 
@@ -119,6 +161,7 @@ def delete_walker(id):
 
     if walker_index >= 0:
         WALKERS.pop(walker_index)
+
 
 def update_walker(id, updated_walker):
     """Updates a single walker in the database
