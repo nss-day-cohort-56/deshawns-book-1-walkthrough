@@ -153,7 +153,7 @@ def delete_walker(id):
     Args:
         id (int): The id of the walker to be deleted
     """
-    with sqlite3.connect("./kennel.sqlite3") as conn:
+    with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
