@@ -1,21 +1,15 @@
 DOGS = [
     {
         'id': 1,
-        'name': 'Larry Fine',
-        'email': 'larry@aol.com',
-        'city': 1
+        'name': 'Jack'
     },
     {
         'id': 2,
-        'name': 'Moe Howard',
-        'email': 'moe@aol.com',
-        'city': 1
+        'name': 'Eleanor'
     },
     {
         'id': 3,
-        'name': 'Curly Howard',
-        'email': 'curly@aol.com',
-        'city': 1
+        'name': 'Gracie'
     }
 ]
 
